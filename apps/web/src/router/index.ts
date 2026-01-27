@@ -3,6 +3,7 @@ import Dashboard from "../views/Dashboard.vue";
 import MainLayout from "../components/layout/MainLayout.vue";
 import ProductView from "../views/ProductView.vue";
 import OrdersView from "../views/OrdersView.vue";
+import CustomerView from "../views/CustomerView.vue";
 
 const routes = [{
     path: "/",
@@ -26,7 +27,7 @@ const routes = [{
         {
             path: "/customers",
             name: "Customers",
-            component: OrdersView
+            component: CustomerView
         },
         {
             path: "/customers",
