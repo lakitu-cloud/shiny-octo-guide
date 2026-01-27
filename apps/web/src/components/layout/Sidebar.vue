@@ -27,7 +27,7 @@ const menuItems = [
   { path: '/orders',     label: 'Orders',     icon: CubeIcon },
   { path: '/customers', label: 'Customers', icon: UsersIcon },
   { path: '/invoices', label: 'Invoice', icon: ClipboardDocumentListIcon },
-  { path: '/reports',   label: 'Reports & Analysis',   icon: DocumentTextIcon },
+  { path: '/users',   label: 'Users',   icon: DocumentTextIcon },
 ] as const
 
 const isActive = (path: string) => {

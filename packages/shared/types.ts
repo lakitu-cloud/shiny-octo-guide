@@ -30,3 +30,19 @@ export interface Invoice {
   total: number;
   status: 'draft' | 'sent' | 'paid';
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string; // Hashed in real app
+  role: 'admin' | 'sales';
+  createdAt: string; // ISO date
+}
+
+export interface Sale {
+  id: string;
+  userId: string;
+  amount: number;
+  date: string; // ISO date
+}
