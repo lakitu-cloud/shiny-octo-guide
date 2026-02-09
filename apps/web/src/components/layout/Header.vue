@@ -15,16 +15,11 @@ const logout = () => {
 
 <template>
   <header
-    class="
-      bg-white border-b border-gray-200 shadow-sm
-      px-6 py-3 flex items-center justify-between
-      sticky top-0 z-10 transition-all duration-300
-    "
-    :class="{ 'pl-20': isSidebarCollapsed }"   <!-- extra left padding when collapsed -->
-  >
+    class="px-6 py-3 flex items-center justify-between sticky top-0 z-10 transition-all duration-300"
+    :class="{ 'pl-20': isSidebarCollapsed }"  >
     <!-- Left side -->
     <h2 class="text-xl font-semibold text-gray-900">
-      Welcome, <span class="text-indigo-700">{{ user.name || 'Guest' }}</span>
+      Welcome, <span class="text-green-700">{{ user.name || 'Guest' }}</span>
     </h2>
 
     <!-- Right side -->

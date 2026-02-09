@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import OrderChart from '../components/charts/OrderChart.vue'
+import StockUnitChart from '../components/charts/StockUnitChart.vue'
+import TopProductsGrid from '../components/grid/TopProductsGrid.vue'
 
 // ── Dummy data (replace later with API / store)
 const stats = [
@@ -51,42 +54,60 @@ const newOrders = computed(() => ({
   changeColor: 'text-green-600',
 }))
 
-// Pure CSS donut chart data (percentages must sum to 100)
-const stockBreakdown = [
-  { label: 'Warehouse Stock', percent: 45, color: 'bg-purple-600' },
-  { label: 'In Production', percent: 35, color: 'bg-teal-500' },
-  { label: 'Retail Store', percent: 20, color: 'bg-amber-500' },
-]
 
-const donutStyle = computed(() => {
-  let cumulative = 0
-  const segments = stockBreakdown.map((item) => {
-    const start = cumulative
-    cumulative += item.percent
-    return `${item.color} ${start}% ${cumulative}%`
-  })
-  return `conic-gradient(${segments.join(', ')}, #e5e7eb 0 100%)`
-})
-
-const topProducts = [
-  { name: 'Rompi Berankang', price: '$160.98', sales: '1.7x sales', code: 'KOG-668-75', multiplier: '1.7x' },
-  { name: 'Rumpi Berkancing', price: '$180.98', sales: 'KOG sales', code: 'KOG-696-95' },
-  { name: 'Blazer assorted pocket', price: '$800.78', sales: '900 sales', code: '' },
-  { name: 'Pattern top with knot', price: '$150.98', sales: '770 sales', code: 'KOG-649-75' },
-  { name: 'Basic Hoodie - blue', price: '$140.99', sales: '512 sales', code: '' },
-]
+const topProducts = ref([
+  {
+    name: 'Cement 50kg ',
+    price: 'TZS 18,500',
+    sales: '1.4x avg',
+    stock: '92',
+    image: 'https://images.unsplash.com/photo-1581092160560-1c1e428e9d65?w=400&auto=format&fit=crop&q=80' 
+  },
+  {
+    name: 'Y10 Rebar 12mm (6m)',
+    price: 'TZS 32,000',
+    sales: '980 units',
+    stock: '68',
+    image: 'https://images.unsplash.com/photo-1581092162387-4c9a5b0a9f5d?w=400&auto=format&fit=crop&q=80' 
+  },
+  {
+    name: 'Common Nails 4 inch (1kg)',
+    price: 'TZS 4,200',
+    sales: '2.1x sales',
+    stock: '85',
+    image: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?w=400&auto=format&fit=crop&q=80' // nails / fasteners close-up
+  },
+  {
+    name: 'Binding Wire 2.5mm Roll',
+    price: 'TZS 12,800',
+    sales: '650 rolls',
+    stock: '45',
+    image: 'https://images.unsplash.com/photo-1581092160560-1c1e428e9d65?w=400&auto=format&fit=crop&q=80' // wire coil (reuse similar industrial)
+  },
+  {
+    name: 'Galvanized Chain Link Fence 6ft',
+    price: 'TZS 85,000',
+    sales: '420m sold',
+    stock: '',
+    image: 'https://images.unsplash.com/photo-1581093458795-4d1e0a4b0a9f?w=400&auto=format&fit=crop&q=80' // fence mesh roll
+  },
+  {
+    name: 'Concrete Blocks 6 inch (Solid)',
+    price: 'TZS 1,800 each',
+    sales: '4,500 units',
+    stock: '',
+    image: 'https://images.unsplash.com/photo-1581092162387-4c9a5b0a9f5d?w=400&auto=format&fit=crop&q=80' // cinder/concrete blocks stack
+  }
+])
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-2">
     <!-- Top Stats Cards -->
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      <div
-        v-for="stat in stats"
-        :key="stat.title"
-        class="bg-white overflow-hidden shadow rounded-lg border border-gray-200"
-      >
-        <div class="px-4 py-5 sm:p-6">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div v-for="stat in stats" :key="stat.title"
+        class="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+        <div class="px-4 py-3 sm:p-6">
           <div class="flex items-center justify-between">
             <div>
               <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">
@@ -106,34 +127,36 @@ const topProducts = [
     </div>
 
     <!-- Middle Section: Overview + Stock Donut -->
-    <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-2 lg:grid-cols-3">
       <!-- Total Order Overview -->
       <div class="lg:col-span-2 bg-white shadow rounded-lg border border-gray-200">
-        <div class="px-6 py-5 border-b border-gray-200">
-          <h3 class="text-lg font-medium text-gray-900">Total Order Overview</h3>
+        <div class="px-6 py-3 flex justify-between items-center border-b border-gray-200">
+          <h3 class="text-md font-semibold text-gray-900">Total Order Overview</h3>
           <p class="mt-1 text-sm text-gray-500">
             Last updated: 3rd May, 2025
           </p>
         </div>
-        <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-green-50 border border-green-200 rounded-lg p-5">
-              <h4 class="text-sm font-medium text-green-800">New Orders</h4>
-              <p class="mt-2 text-3xl font-bold text-green-900">{{ newOrders.count }}</p>
-              <p class="mt-1 text-sm text-green-700">
+
+        <div class="p-4 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-2">
+          <!-- Left column: Key metrics -->
+          <div class="lg:col-span-1 space-y-3">
+            <div class="bg-green-500 rounded-lg p-3">
+              <h4 class="text-sm font-medium text-white">New Orders</h4>
+              <p class="mt-2 text-3xl font-bold text-white">{{ newOrders.count }}</p>
+              <p class="mt-1 text-sm text-white">
                 last order: {{ newOrders.date }}
               </p>
             </div>
 
-            <div>
-              <h4 class="text-sm font-medium text-gray-700 mb-2">Revenue</h4>
+            <div class="border border-green-500 p-3 rounded-lg">
+              <h4 class="text-sm font-medium  text-gray-700 mb-2">Revenue</h4>
               <p class="text-2xl font-semibold">{{ revenueTrend.current }}</p>
               <p :class="['text-sm mt-1', revenueTrend.changeColor]">
                 {{ revenueTrend.change }}
               </p>
             </div>
 
-            <div>
+            <div class="border border-green-500 p-3 rounded-lg">
               <h4 class="text-sm font-medium text-gray-700 mb-2">Average Order</h4>
               <p class="text-2xl font-semibold">{{ avgOrder.value }}</p>
               <p :class="['text-sm mt-1', avgOrder.changeColor]">
@@ -142,77 +165,26 @@ const topProducts = [
             </div>
           </div>
 
-          <!-- Fake sparkline / area chart -->
-          <div class="mt-6">
-            <h4 class="text-sm font-medium text-gray-700 mb-3">Statistics</h4>
-            <div class="h-48 bg-gradient-to-t from-teal-100 to-transparent rounded-lg relative overflow-hidden">
-              <div class="absolute inset-0 opacity-40">
-                <!-- Very simple fake curve using gradient -->
-                <div class="w-full h-full bg-gradient-to-r from-teal-400/30 via-teal-500/50 to-teal-600/40" />
-              </div>
-              <div class="absolute bottom-0 left-0 right-0 h-3/5 bg-gradient-to-t from-teal-500/60 to-transparent" />
+          <!-- Right column: Chart -->
+          <div class="lg:col-span-3 flex flex-col">
+            <div class="flex-grow relative min-h-[240px]">
+              <OrderChart />
             </div>
           </div>
         </div>
       </div>
 
       <!-- Stock Unit Donut -->
-      <div class="bg-white shadow rounded-lg border border-gray-200">
-        <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-          <h3 class="text-lg font-medium text-gray-900">Stock Unit</h3>
-          <select class="text-sm border-gray-300 rounded-md">
-            <option>Month</option>
-            <option>Quarter</option>
-            <option>Year</option>
-          </select>
-        </div>
-        <div class="p-8 flex flex-col items-center">
-          <div
-            class="w-48 h-48 rounded-full relative"
-            :style="{ background: donutStyle }"
-          >
-            <div class="absolute inset-4 bg-white rounded-full flex items-center justify-center">
-              <div class="text-center">
-                <p class="text-3xl font-bold text-gray-900">100%</p>
-                <p class="text-sm text-gray-500">Total Inventory</p>
-              </div>
-            </div>
-          </div>
+      <StockUnitChart />
 
-          <div class="mt-8 w-full space-y-3">
-            <div
-              v-for="item in stockBreakdown"
-              :key="item.label"
-              class="flex items-center justify-between text-sm"
-            >
-              <div class="flex items-center">
-                <span :class="['w-3 h-3 rounded-full mr-2', item.color]" />
-                {{ item.label }}
-              </div>
-              <span class="font-medium">{{ item.percent }}%</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Most Selling Products -->
     <div class="bg-white shadow rounded-lg border border-gray-200">
-      <div class="px-6 py-5 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">Most Selling Products</h3>
+      <div class="px-6 py-3 border-b border-gray-200">
+        <h3 class="text-md font-semibold text-gray-900">Most Selling Products</h3>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 p-6">
-        <div
-          v-for="product in topProducts"
-          :key="product.name"
-          class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow"
-        >
-          <h4 class="font-medium text-gray-900 mb-1">{{ product.name }}</h4>
-          <p class="text-lg font-semibold text-indigo-700">{{ product.price }}</p>
-          <p class="text-sm text-gray-600 mt-2">{{ product.sales }}</p>
-          <p v-if="product.code" class="text-xs text-gray-500 mt-1">{{ product.code }}</p>
-        </div>
-      </div>
+      <TopProductsGrid :top-products="topProducts" />
     </div>
   </div>
 </template>
